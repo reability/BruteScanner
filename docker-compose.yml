@@ -1,0 +1,38 @@
+version: "3.9"
+services:
+   appgateway:
+      build: ./FindMeGateway
+      restart: always
+      ports:
+       - "8000:8000"
+   master:
+      build:
+         context: ./Findme-Lord
+         dockerfile: master.Dockerfile
+      restart: always
+      links:
+       - redis
+       - appgateway
+      ports:
+       - "5000"
+   worker:
+      image: jaredv/rq-docker:0.0.2
+      command: rq worker -u redis://redis:6379 high normal low
+      deploy:
+         replicas: 4
+      depends_on:
+       - master
+      links:
+       - redis
+       - master
+   redis:
+      image: redis
+      ports:
+       - "6379:6379"
+      volumes:
+       - ./redis:/data
+   rq-dashboard:
+      image: jaredv/rq-docker:0.0.2
+      command: rq-dashboard -H rq-server
+      ports:
+       - "9181:9181"
