@@ -1,14 +1,13 @@
 version: "3.9"
 services:
    appgateway:
-      build: ./FindMeGateway
+      build: ./Gateway
       restart: always
       ports:
        - "8000:8000"
-   master:
+   FactoryApp:
       build:
-         context: ./Findme-Lord
-         dockerfile: master.Dockerfile
+         context: ./FactoryApp
       restart: always
       links:
        - redis
@@ -24,7 +23,7 @@ services:
        - master
       links:
        - redis
-       - master
+       - FactoryApp
    redis:
       image: redis
       ports:
