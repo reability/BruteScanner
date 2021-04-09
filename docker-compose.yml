@@ -5,7 +5,7 @@ services:
       restart: always
       ports:
        - "8000:8000"
-   FactoryApp:
+   factoryapp:
       build:
          context: ./FactoryApp
       restart: always
@@ -20,10 +20,10 @@ services:
       deploy:
          replicas: 4
       depends_on:
-       - master
+       - factoryapp
       links:
        - redis
-       - FactoryApp
+       - factoryapp
    redis:
       image: redis
       ports:
